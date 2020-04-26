@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>主页</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="table/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="plug/jquery.min.js"></script>
+<script src="plug/bootstrap.min.js"></script>
+<script src="table/bootstrap-table.min.js"></script>
+<script src="table/bootstrap-table-zh-CN.min.js"></script>
+<script src="plug/vue.min.js"></script>
+<script src="js/common.js"></script>
+</head>
+<body>
+
+<div class="panel-body" style="padding-bottom:0px;">
+        <div class="panel panel-default">
+            <div class="panel-heading">查询条件</div>
+            <div class="panel-body">
+                <form id="formSearch" class="form-horizontal">
+                    <div class="form-group" style="margin-top:15px">
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">书名</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="name">
+                        </div>
+                        <div class="col-sm-4" style="text-align:left;">
+                            <button type="button" style="margin-left:50px" id="refresh_button" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>       
+
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+            </button>
+            <button id="btn_edit" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+            </button>
+            <button id="btn_delete" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+            </button>
+            <button id="btn_out" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>退出登录
+            </button>
+        </div>
+        
+ 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel">新增</h4>
+                 </div>
+                 <div id="bookdata" class="modal-body">
+ 					 <input id="bookid" name="id" value="" class="form-control" style="display: none;"/>
+                     <div class="form-group">
+                         <label for="txt_departmentname">书名</label>
+                         <input id="bookname" type="text" name="name" class="form-control" id="txt_departmentname" placeholder="书名">
+                     </div>
+                     <div class="form-group">
+                         <label for="txt_departmentlevel">类别</label>
+                         <input id="leibie" type="text" name="leibie" class="form-control" id="txt_departmentlevel" placeholder="类别">
+                     </div>
+                     <div class="form-group">
+                         <label for="txt_statu">作者</label>
+                         <input id="author" type="text" name="author" class="form-control" id="txt_statu" placeholder="作者">
+                     </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                     <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+        
+<table id="list" data-click-to-select="true">
+</table>
+
+
+<script type="text/javascript">
+
+$("#list").bootstrapTable({ // 对应table标签的id
+    url: baseUrl+"book/list", // 获取表格数据的url
+    cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+    striped: true,  //表格显示条纹，默认为false
+    toolbar: '#toolbar', 
+    pagination: true, // 在表格底部显示分页组件，默认false
+    pageList: [10, 20], // 设置页面可以显示的数据条数
+    pageSize: 5, // 页面数据条数
+    pageNumber: 1, // 首页页码
+    sidePagination: 'server', // 设置为服务器端分页
+    queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+        return {
+    	    name : $('#name').val(),
+            pageSize: params.limit, // 每页要显示的数据条数
+            offset: params.offset, // 每页显示数据的开始行号
+        }
+    },
+    columns: [
+    	 {
+             checkbox: true, // 显示一个勾选框
+             align: 'center' // 居中显示
+         },
+         {
+             field: 'id', // 返回json数据中的id
+             title: '编号', // 表格表头显示文字
+             align: 'center', // 左右居中
+             valign: 'middle' // 上下居中
+         },
+         {
+            field: 'name', // 返回json数据中的name
+            title: '书名', // 表格表头显示文字
+            align: 'center', // 左右居中
+            valign: 'middle' // 上下居中
+        }, {
+            field: 'leibie',
+            title: '类别',
+            align: 'center',
+            valign: 'middle'
+        }, 
+        {
+            field: 'author',
+            title: '作者',
+            align: 'center',
+            valign: 'middle'
+        }
+    ],
+    onLoadSuccess: function(){  //加载成功时执行
+          console.info("加载成功");
+    },
+    onLoadError: function(){  //加载失败时执行
+          console.info("加载数据失败");
+    }
+
+})
+
+$("#refresh_button").click(function (){
+	$("#list").bootstrapTable('refresh',{url : baseUrl+"book/list"} );
+});
+
+//btn_out退出登录
+$("#btn_out").click(function (){
+	localStorage.removeItem("token");
+	location.reload();
+});
+//新增btn_add
+$("#btn_add").click(function (){
+	 $("#myModalLabel").text("新增");
+	 $('#bookid').val("");
+	 $('#bookname').val("");
+	 $('#author').val("");
+	 $('#leibie').val("");
+	 $('#myModal').modal();
+});
+
+//修改btn_edit
+$("#btn_edit").click(function (){
+	 $("#myModalLabel").text("修改");
+	//获取选中行的数据
+		var rows = $("#list").bootstrapTable('getSelections');
+		if(rows.length!=1){
+			alert("请选择一条数据");
+		}
+		else{
+		var row = rows[0];
+		$('#bookid').val(row.id);
+		$('#bookname').val(row.name);
+		$('#author').val(row.author);
+		$('#leibie').val(row.leibie);
+		$('#myModal').modal();
+		}
+});
+
+//提交btn_submit
+$("#btn_submit").click(function (){
+	ajaxaddOrUpdate();
+});
+
+function ajaxaddOrUpdate(){
+	var bookid=$('#bookid').val();
+	var url=baseUrl+"book/add";
+	if(!isEmpty(bookid)){
+		 url=baseUrl+"book/update";
+	}
+	//获取数据
+    var data={
+			id:bookid,
+			name:$('#bookname').val(),
+			author:$('#author').val(),
+    		leibie:$('#leibie').val()
+	};
+	$.ajax({
+        type: "post",
+        url: url,
+        contentType : "application/json",
+		data : JSON.stringify(data),
+		dataType : "json",
+        success: function (result) {
+            if (result.code == 0) {
+            	alert('成功');
+            	$("#list").bootstrapTable('refresh',{url : baseUrl+"book/list"} );
+            }
+        },
+        error: function () {
+        	alert('Error');
+        },
+        complete: function () {
+
+        }
+
+    });
+}
+
+//删除btn_delete
+$("#btn_delete").click(function (){
+	//取表格的选中行数据
+	            var arrselections = $("#list").bootstrapTable('getSelections');
+	            if (arrselections.length != 1) {
+	                alert('请选择一条数据');
+	                return;
+	            }
+	            var r=confirm("确认要删除选择的数据吗？");
+	            if (r==true)
+	              {
+	            	$.ajax({
+	                    type: "post",
+	                    url: "/book/delete",
+	                    data: {
+	                    	id:arrselections[0].id
+	                    },
+	                    success: function (result) {
+	                        if (result.code==0) {
+	                        	alert('成功删除');
+	                        	$("#list").bootstrapTable('refresh',{url : baseUrl+"book/list"} );
+	                        }
+	                    },
+	                    error: function () {
+	                    	alert('Error');
+	                    },
+	                    complete: function () {
+	
+	                    }
+	
+	                });
+	              }else{
+	            return;
+	              }
+	            
+});
+
+
+
+</script>
+</body>
+</html>

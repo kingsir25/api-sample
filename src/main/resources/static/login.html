@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<link href="css/login.css" rel="stylesheet" />
+</head>
+<body>
+	<div id="app">
+    <div class="login" >
+		<h2>登录</h2>
+		<input type="text" v-model="form.username"  v-focus="userfocus" placeholder="用户名" />
+		<input type="password" v-model="form.password" v-focus="pwdfocus"  placeholder="密码" />
+		<button type="submit" class="btn btn-primary btn-block btn-large" @click="login">登录</button>
+		<button type="submit" class="btn btn-primary btn-block btn-large" @click="reg">注册</button>
+	</div>
+	<div v-if="error" class="alert alert-danger" role="alert" style="text-align: center;color: red">{{errorMsg}}</div>
+</div>
+
+<script src="plug/jquery.min.js"></script>
+<script src="plug/vue.min.js"></script>
+<script src="js/common.js"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el : '#app',
+	data : {
+		form : {
+			username : '',
+			password : '',
+		},
+		error : false,
+		userfocus : true,
+		pwdfocus : false,
+		errorMsg : ''
+	},
+	beforeCreate : function() {
+		if (self != top) {
+			top.location.href = self.location.href;
+		}
+	},
+	methods : {
+		login : function(event) {
+			if (!vm.form.username) {
+				vm.error = true;
+				vm.errorMsg = "用户名不能为空!";
+				vm.userfocus = true;
+				return;
+			}
+			if (!vm.form.password) {
+				vm.error = true;
+				vm.errorMsg = "密码不能为空!";
+				vm.pwdfocus = true;
+				return;
+			}
+			$.ajax({
+				type : "POST",
+				url : baseUrl + "sys/login",
+				data : {
+					"username":vm.form.username,
+					"password":vm.form.password
+				},
+				dataType : "json",
+				success : function(result) {
+					if (result.code == 0) {// 登录成功
+						localStorage.setItem('token',result.Authorization);
+						localStorage.setItem('username',result.username);
+						parent.location.href = 'index.html';
+					} else {
+						vm.error = true;
+						vm.errorMsg = result.msg;
+					}
+				}
+			});
+		},
+		reg : function(event) {
+			if (!vm.form.username) {
+				vm.error = true;
+				vm.errorMsg = "用户名不能为空!";
+				vm.userfocus = true;
+				return;
+			}
+			if (!vm.form.password) {
+				vm.error = true;
+				vm.errorMsg = "密码不能为空!";
+				vm.pwdfocus = true;
+				return;
+			}
+			$.ajax({
+				type : "POST",
+				url : baseUrl + "sys/reg",
+				data : {
+					"username":vm.form.username,
+					"password":vm.form.password
+				},
+				dataType : "json",
+				success : function(result) {
+					if (result.code == 0) {// 登录成功
+						alert("注册成功")
+					} else {
+						vm.error = true;
+						vm.errorMsg = result.msg;
+					}
+				}
+			});
+		}
+	}
+});
+
+</script>
+</body>
+</html>
