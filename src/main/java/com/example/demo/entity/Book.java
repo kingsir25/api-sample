@@ -14,6 +14,13 @@ import lombok.Data;
 @Data
 public class Book
 {
+	public Book(long id, String name, String leibie, String author) {
+		this.id = id;
+		this.name = name;
+		this.leibie = leibie;
+		this.author = author;
+	}
+    public Book() {}
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

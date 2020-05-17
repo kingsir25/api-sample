@@ -1,7 +1,11 @@
 package com.example.demo.web;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Book;
 import com.example.demo.service.BookService;
+import com.example.demo.service.EmployeeDAO;
 import com.example.demo.util.BootstrapTable;
 import com.example.demo.util.R;
 
@@ -22,9 +27,13 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("book")
 public class BookController
 {
+	@Autowired
+    private EntityManager entityManager;
 
 	@Resource
 	BookService bookService;
+	@Resource
+	EmployeeDAO employeeDAO;
 
 	@RequestMapping("/list")
 	@ApiOperation("支払状況ステータス検索")
@@ -61,5 +70,27 @@ public class BookController
 		bookService.delete(id);
 		return R.ok();
 	}
+	@RequestMapping("/test")
+	public R test()
+	{
+
+		Session session = getSession();
+		@SuppressWarnings("rawtypes")
+		Query query = session.createSQLQuery("select * from book;");
+		query.executeUpdate();
+		System.out.println(query);
+		return R.ok();
+	}
+	@RequestMapping("/test1")
+	public R test1()
+	{
+
+		employeeDAO.test1();
+		System.out.println("test1");
+		return R.ok();
+	}
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
+    }
 
 }

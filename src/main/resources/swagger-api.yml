@@ -1,0 +1,79 @@
+swagger: "2.0"
+info:
+  title: "使用swagger-ui文档"
+  description: "使用swagger-ui文档"
+  version: "1.1.0"
+basePath: "/test-service"
+tags:
+- name: "tag1"
+- name: "tag2"
+- name: "tag2"
+schemes:
+- "http"
+paths:
+  /test/queryUser:
+    post:
+      tags:
+      - "tag1"
+      summary: "查询用户（用于测试）"
+      description: ""
+      operationId: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+       - in: "query"
+         name: "userName"
+         type: string
+         description: "用户名称"
+         required: true
+      responses:
+        200:
+          description:
+          schema:
+            $ref: "bean-definition.yml#/definitions/resultDto"
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        500:
+          description: Internal Server Error
+  /test/modifyUser:
+    post:
+      tags:
+      - "tag2"
+      summary: "修改用户信息（用于测试）"
+      description: ""
+      operationId: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "修改用户信息入参Json"
+          required: true
+          schema:
+            $ref: "bean-definition.yml#/definitions/modifyParameter"
+      responses:
+        200:
+          description:
+          schema:
+            $ref: "bean-definition.yml#/definitions/resultDto"
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        500:
+          description: Internal Server Error
+

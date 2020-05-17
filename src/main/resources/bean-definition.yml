@@ -1,0 +1,24 @@
+definitions:
+  modifyParameter:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+        description: "用户id"
+        default: "testId"
+      UserName:
+        type: "string"
+        description: "用户名称"
+        default: "userName"
+  
+  ResultDto:
+      type: "object"
+      properties:
+        code:
+          type: "string"
+          default: "000000"
+        message:
+          type: "string"
+          default: "成功"
+        data:
+          type: "object"
