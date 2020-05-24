@@ -47,7 +47,7 @@ public class SwaggerConfig {
 				.build().apiInfo(new ApiInfoBuilder()
 						.title("PDWF Payment Status Search API")
 						.description("PDWF Payment Status Search API (支払状況ステータス検索) detail info: SpringBoot2 + Swagger2.9.2 ......")
-						.termsOfServiceUrl("https://wjrwww0y01.ads-jp.intraxa:82/PDWorkflow/API")
+						.termsOfServiceUrl("https://xxxx.xxx.com:82/xxxx/API")
 						.version("1.0.0")
 						.contact(new Contact("XXX.SSS", "XXX.XXX.com", "XXX@Xmail.com"))
 						.license("XXXX License")
