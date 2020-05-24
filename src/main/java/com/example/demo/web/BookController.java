@@ -89,6 +89,22 @@ public class BookController
 		System.out.println("test1");
 		return R.ok();
 	}
+	@RequestMapping("/test2")
+	public R test2()
+	{
+
+		employeeDAO.test2();
+		System.out.println("test2");
+		return R.ok();
+	}
+	@RequestMapping("/test3")
+	public R test3()
+	{
+
+		employeeDAO.test3();
+		System.out.println("test3");
+		return R.ok();
+	}
     private Session getSession() {
         return entityManager.unwrap(Session.class);
     }
