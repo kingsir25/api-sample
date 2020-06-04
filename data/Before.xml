@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <!--
+    データセット用のXMLでは数値データも""で囲む
+    DATEやTIMESTAMP型の日付は「-」つなぎで指定する
+  -->
+  <EMP
+      ID="1"
+      NAME="scott"
+      AGE="22"
+      SALARY="200000"
+      JOB_TYPE="employee"
+      HIREDATE="2017-01-01 12:34:56"
+      DEPARTMENT_ID="1"
+  />
+</dataset>
